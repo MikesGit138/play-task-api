@@ -15,3 +15,12 @@ GET  /check   controllers.HomeController.checker(request: Request)
 GET /handle/:myName     controllers.HomeController.handler(myName: String)
 
 # task routes
+GET /tasks  controllers.HomeController.getTasks()
+
+POST /create-task controllers.HomeController.createTask(request: Request)
+
+PUT /update-task/:id controllers.HomeController.updateTask(request : Request, id: Int)
+
+DELETE /del-task/:id controllers.HomeController.deleteTask(id: Int)
+
+PUT /complete-task/:id controllers.HomeController.completeTask(id: Int)
