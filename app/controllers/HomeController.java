@@ -42,14 +42,14 @@ public class HomeController extends Controller {
              return ok(Json.toJson(tasks));
      }
 
-    // //create task
+    //create task
      public Result createTask(Http.Request request){
          Task newtask = Json.fromJson(request.body().asJson(), Task.class);
          if (ebeanConfig == null) {
              return internalServerError("Ebean configuration is missing");
          }
          DB.save(newtask);
-         return ok();
+         return ok("task successfully added");
      }
 
     public Result updateTask(Http.Request request, Integer id) {
@@ -72,7 +72,7 @@ public class HomeController extends Controller {
             taskToDelete.delete();
             return ok("Task of id: " + id +" deleted");
         } else {
-            return notFound("Task if id: " +id + " not found");
+            return notFound("Task of id: " +id + " not found");
         }
     }
 
@@ -89,4 +89,37 @@ public class HomeController extends Controller {
              return notFound("Task of id: " + id + " not found");
          }
      }
+    //getusers
+     public Result getUsers(){
+         List<User> users = User.find.all();
+         if (users.size() == 0)
+             return ok("You have no users as yet");
+         else
+             return ok(Json.toJson(users));
+     }
+     public Result createUser(Http.Request request){
+         User newUser = Json.fromJson(request.body().asJson(), User.class);
+         if (ebeanConfig == null) {
+             return internalServerError("Ebean configuration is missing");
+         }
+         DB.save(newUser);
+         return ok("user successfully added");
+     }
+
+     //userlogin
+        public Result userLogin(Http.Request request){
+            User user = Json.fromJson(request.body().asJson(), User.class);
+            User userToLogin = DB.find(User.class)
+                    .where().eq("username", user.getUsername())
+                    .findOne();
+            if (userToLogin != null) {
+                if (userToLogin.getPassword().equals(user.getPassword())) {
+                    return ok("User logged in");
+                } else {
+                    return ok("User password incorrect");
+                }
+            } else {
+                return notFound("User not found");
+            }
+        }
 }
