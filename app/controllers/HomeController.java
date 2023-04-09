@@ -3,7 +3,7 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
-//import io.ebean.Ebean;
+
 import io.ebean.DB;
 import model.*;
 import java.util.List;
@@ -98,12 +98,17 @@ public class HomeController extends Controller {
              return ok(Json.toJson(users));
      }
      public Result createUser(Http.Request request){
+        //only create username when user does not exist
          User newUser = Json.fromJson(request.body().asJson(), User.class);
-         if (ebeanConfig == null) {
-             return internalServerError("Ebean configuration is missing");
+         User userToCreate = DB.find(User.class)
+                 .where().eq("username", newUser.getUsername())
+                 .findOne();
+         if (userToCreate == null) {
+             DB.save(newUser);
+             return ok("User successfully added");
+         } else {
+             return ok("User already exists");
          }
-         DB.save(newUser);
-         return ok("user successfully added");
      }
 
      //userlogin
