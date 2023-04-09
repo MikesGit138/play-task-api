@@ -6,6 +6,7 @@ import io.ebean.Model;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import org.mindrot.jbcrypt.BCrypt;
 
 @Entity
 public class User extends Model{
@@ -15,6 +16,11 @@ public class User extends Model{
     public String  password;
 
     public static final Finder<Integer, User> find = new Finder<>(User.class);
+
+
+    public String hashPassword(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt());
+    }
 
     //getters
     public String getUsername(){
@@ -35,7 +41,11 @@ public class User extends Model{
     }
 
     public void setPassword(String password){
-        this.password = password;
+        this.password = hashPassword(password);
+    }
+
+    public boolean checkPassword(String password) {
+        return BCrypt.checkpw(password, this.password);
     }
 
 

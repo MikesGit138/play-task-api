@@ -111,6 +111,7 @@ public class HomeController extends Controller {
          }
      }
 
+
      //userlogin
         public Result userLogin(Http.Request request){
             User user = Json.fromJson(request.body().asJson(), User.class);
@@ -118,10 +119,11 @@ public class HomeController extends Controller {
                     .where().eq("username", user.getUsername())
                     .findOne();
             if (userToLogin != null) {
-                if (userToLogin.getPassword().equals(user.getPassword())) {
+                if (userToLogin.checkPassword(request.body().asJson().get("password").asText())) {
                     return ok("User logged in");
                 } else {
-                    return ok("User password incorrect");
+                    return unauthorized("User password is incorrect");
+
                 }
             } else {
                 return notFound("User not found");
