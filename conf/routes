@@ -15,17 +15,17 @@ GET  /check   controllers.HomeController.checker(request: Request)
 GET /handle/:myName     controllers.HomeController.handler(myName: String)
 
 # task routes
-GET /tasks  controllers.HomeController.getTasks
+GET /tasks  controllers.TaskController.getTasks
 
-POST /create-task controllers.HomeController.createTask(request: Request)
+POST /create-task controllers.TaskController.createTask(request: Request)
 
-PUT /update-task/:id controllers.HomeController.updateTask(request : Request, id: Int)
+PUT /update-task/:id controllers.TaskController.updateTask(request : Request, id: Int)
 
-DELETE /del-task/:id controllers.HomeController.deleteTask(id: Int)
+DELETE /del-task/:id controllers.TaskController.deleteTask(id: Int)
 
-PUT /complete-task/:id controllers.HomeController.completeTask(id: Int)
+PUT /complete-task/:id controllers.TaskController.completeTask(id: Int)
 
 #user routes
-GET /users controllers.HomeController.getUsers
-POST /create-user controllers.HomeController.createUser(request: Request)
-POST /login controllers.HomeController.userLogin(request: Request)
+GET /users controllers.UserController.getUsers
+POST /create-user controllers.UserController.createUser(request: Request)
+POST /login controllers.UserController.userLogin(request: Request)
