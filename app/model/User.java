@@ -2,16 +2,19 @@ package model;
 
 import io.ebean.Finder;
 import io.ebean.Model;
+import org.checkerframework.common.aliasing.qual.Unique;
+import org.mindrot.jbcrypt.BCrypt;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-
-import org.mindrot.jbcrypt.BCrypt;
+import javax.validation.Constraint;
 
 @Entity
 public class User extends Model{
     @Id
     public Integer id;
+    @Column(unique = true)
     public String  username;
     public String  password;
 

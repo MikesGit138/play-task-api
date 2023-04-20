@@ -1,13 +1,14 @@
 package controllers;
+
+import com.google.inject.Inject;
+import io.ebean.DB;
+import model.Task;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 
-import io.ebean.DB;
-import model.*;
 import java.util.List;
-import com.google.inject.Inject;
 
 public class TaskController extends Controller {
     private final play.db.ebean.EbeanConfig ebeanConfig;
@@ -16,6 +17,7 @@ public class TaskController extends Controller {
     public TaskController(play.db.ebean.EbeanConfig ebeanConfig){
         this.ebeanConfig = ebeanConfig;
     }
+
     //get tasks
     public Result getTasks(){
         List<Task> tasks = Task.find.all();
@@ -32,9 +34,9 @@ public class TaskController extends Controller {
             return internalServerError("Ebean configuration is missing");
         }
         DB.save(newtask);
-        return ok("task successfully added");
+        return created("task successfully added");
     }
-
+//update task
     public Result updateTask(Http.Request request, Integer id) {
         Task updatedTask = Json.fromJson(request.body().asJson(), Task.class);
         Task taskToUpdate = DB.find(Task.class, id);
@@ -48,7 +50,7 @@ public class TaskController extends Controller {
         }
     }
 
-
+//delete task
     public Result deleteTask(Integer id) {
         Task taskToDelete = DB.find(Task.class, id);
         if (taskToDelete != null) {
@@ -58,10 +60,6 @@ public class TaskController extends Controller {
             return notFound("Task of id: " +id + " not found");
         }
     }
-
-
-
-
 
     //complete task
     public Result completeTask(Integer id) {
