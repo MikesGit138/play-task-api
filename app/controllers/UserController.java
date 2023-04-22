@@ -78,7 +78,7 @@ public class UserController extends Controller{
                     return unauthorized("Invalid token");
                 }
                 // Return the token as a response
-                return ok(token);
+                return ok(Json.toJson(token));
             } else {
                 return unauthorized("User password is incorrect");
             }
