@@ -58,6 +58,8 @@ public class UserController extends Controller{
                         .setIssuer("artuvic-tasks")
                         .setSubject("user")
                         .setExpiration(new Date(System.currentTimeMillis() + 86400000))
+                        .claim("username", userToLogin.getUsername())
+                        .claim("id", userToLogin.getId())
                         .signWith(SignatureAlgorithm.HS256, "secret")
                         .compact();
                 // Verify the token
