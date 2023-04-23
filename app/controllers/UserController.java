@@ -5,7 +5,6 @@ package controllers;
 import io.ebean.DB;
 import io.jsonwebtoken.*;
 import model.User;
-import model.JwtUtil;
 
 import play.libs.Json;
 import play.mvc.Controller;
@@ -14,14 +13,9 @@ import play.mvc.Result;
 
 import java.util.Date;
 import java.util.List;
-import com.google.inject.Inject;
-
-import java.security.Key;
 
 
 public class UserController extends Controller{
-
-    //Algorithm algorithm = Algorithm.HMAC256("secret");
 
     //getusers
     public Result getUsers(){
@@ -54,6 +48,7 @@ public class UserController extends Controller{
                 .findOne();
         if (userToLogin != null) {
             if (userToLogin.checkPassword(request.body().asJson().get("password").asText())) {
+                // Create a token
                 String token = Jwts.builder()
                         .setIssuer("artuvic-tasks")
                         .setSubject("user")
