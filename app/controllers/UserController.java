@@ -15,17 +15,18 @@ import java.util.Date;
 import java.util.List;
 
 
-public class UserController extends Controller{
+public class UserController extends Controller {
 
     //getusers
-    public Result getUsers(){
+    public Result getUsers() {
         List<User> users = User.find.all();
         if (users.size() == 0)
             return notFound("You have no users as yet");
         else
             return ok(Json.toJson(users));
     }
-    public Result createUser(Http.Request request){
+
+    public Result createUser(Http.Request request) {
         //only create username when user does not exist
         User newUser = Json.fromJson(request.body().asJson(), User.class);
         User userToCreate = DB.find(User.class)
@@ -74,8 +75,12 @@ public class UserController extends Controller{
                 } catch (JwtException e) {
                     return unauthorized("Invalid token");
                 }
-                // Return the token as a response
-                return ok(Json.toJson(token));
+                if (verifyToken(token, "secret"))
+                    // Return the token as a response
+                    return ok(Json.toJson(token));
+                else
+                    //token signature not recognized
+                    return unauthorized("Token unknown");
             } else {
                 return unauthorized("User password is incorrect");
             }
@@ -84,5 +89,15 @@ public class UserController extends Controller{
         }
     }
 
+
+    //check token signature
+    public static boolean verifyToken(String token, String secret) {
+        try {
+            Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
+    }
 
 }
